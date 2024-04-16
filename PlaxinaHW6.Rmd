@@ -1,0 +1,88 @@
+```{r}
+# Установим общие параметры для всех задач
+alpha <- 0.05
+beta <- 0.2
+dropout_rate <- 0.1
+
+# Найдем z_alpha/2 (квантиль нормального распределения для уровня значимости alpha/2)
+z_alpha_2 <- abs(qnorm(1 - alpha/2))
+# Найдем z_beta (квантиль нормального распределения для мощности)
+z_beta <- abs(qnorm(beta))
+z_alpha_2
+z_beta
+```
+
+## Задание 1
+
+```{r}
+# дисперсия
+sd <- 0.20
+# разница средних
+e <- 0.1
+# значимая разница
+delta <- 0.25
+
+# Рассчитаем объем выборки для исследования
+nominator <- (z_alpha_2 + z_beta)^2 * sd^2
+denominator <- 2 * (delta - abs(e))^2
+sample_size <- nominator / denominator
+
+# Учтем долю выпадения
+sample_size_with_dropout <- sample_size / (1 - dropout_rate)
+# Округление
+sample_size_for_one_group <- ceiling(sample_size_with_dropout)
+total_sample_size <- sample_size_for_one_group * 2
+
+cat('Размер выборки для n1=n2:', sample_size_for_one_group, '\n')
+cat('Общий размер выборки n:', total_sample_size, '\n')
+```
+
+## Задание 2
+
+```{r}
+# Значимая разница
+delta <- -0.1
+# Доля для препаратов
+p1 <- 0.85
+p2 <- 0.65
+
+# Рассчитаем объем выборки для исследования
+nominator <- (z_alpha_2 + z_beta)^2 * (p1 * (1 - p1) + p2 *(1 - p2))
+denominator <- (p1 - p2 - delta)^2
+sample_size <- nominator / denominator
+
+# Учтем долю выпадения
+sample_size_with_dropout <- sample_size / (1 - dropout_rate)
+# Округление
+sample_size_for_one_group <- ceiling(sample_size_with_dropout)
+total_sample_size <- sample_size_for_one_group * 2
+
+cat('Размер выборки для n1=n2:', sample_size_for_one_group, '\n')
+cat('Общий размер выборки n:', total_sample_size, '\n')
+```
+
+## Задание 3
+
+```{r}
+# Отношение рисков
+HR <- 2
+# Процент пациентов
+d <- 0.8
+# Соотношение групп
+p1 <- 0.5
+p2 <- 0.5
+
+# Рассчитаем объем выборки для исследования
+nominator <- (z_alpha_2 + z_beta)^2
+denominator <- (log(HR))^2 * p1 * p2 * d
+sample_size <- nominator / denominator
+
+# Учтем долю выпадения
+sample_size_with_dropout <- sample_size / (1 - dropout_rate)
+# Округление
+sample_size_for_one_group <- ceiling(sample_size_with_dropout)
+total_sample_size <- sample_size_for_one_group * 2
+
+cat('Размер выборки для n1=n2:', sample_size_for_one_group, '\n')
+cat('Общий размер выборки n:', total_sample_size, '\n')
+```
